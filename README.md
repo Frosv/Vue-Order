@@ -1,4 +1,4 @@
-# shop
+# Vue-Order
 
 > A Vue.js project
 
