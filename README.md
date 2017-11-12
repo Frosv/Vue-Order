@@ -1,6 +1,6 @@
 # Vue-Order
 
-> A Vue.js project
+> 初学Vue上手就是干，直接看别人的教程自己写出一个自己的点餐系统
 
 ## Build Setup
 
