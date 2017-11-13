@@ -13,8 +13,8 @@
                 <el-table-column prop="price" label="金额" sortable align="center"></el-table-column>
                 <el-table-column fixed="right" label="操作" width="200">
                   <template slot-scope="scope">
-                            <el-button type="primary" size="mini">查看</el-button>
-                            <el-button type="success" size="mini">编辑</el-button>
+                              <el-button type="primary" size="mini">查看</el-button>
+                              <el-button type="success" size="mini">编辑</el-button>
                   </template>
                 </el-table-column>
               </el-table>
@@ -45,24 +45,57 @@
 
             <el-tabs v-model="classification" type="card" @tab-click="handleClick">
               <el-tab-pane label="套餐" name="first">
-                <el-row>
-                  <el-col :span="8" v-for="(o, index) in 2" :key="o" :offset="index > 0 ? 2 : 0">
-                    <el-card :body-style="{ padding: '0px' }">
-                      <img src="../../assets/logo.png" class="image">
-                      <div style="padding: 14px;">
-                        <span>好吃的汉堡</span>
-                        <div class="bottom clearfix">
-                          <time class="time">{{ currentDate }}</time>
-                          <el-button type="text" class="button">操作按钮</el-button>
-                        </div>
-                      </div>
-                    </el-card>
-                  </el-col>
-                </el-row>
+                <ul class='cookList'>
+                    <li v-for="(goods,index) in typeGoods" :key="index">
+                        <span class="foodImg">
+                          <img :src="goods.goodsImg" width="100%">
+                        </span>
+                        <p class="type-info-right">
+                          <span class="foodName">{{goods.goodsName}}</span>
+                          <span class="foodPrice">￥{{goods.price}}元</span>
+                        </p>
+                    </li>
+                </ul>
               </el-tab-pane>
-              <el-tab-pane label="汉堡" name="second">汉堡</el-tab-pane>
-              <el-tab-pane label="小食" name="third">小食</el-tab-pane>
-              <el-tab-pane label="饮料" name="fourth">饮料</el-tab-pane>
+              <el-tab-pane label="汉堡" name="second">
+                <ul class='cookList'>
+                    <li v-for="(goods,index) in typeGoods2" :key="index">
+                        <span class="foodImg">
+                          <img :src="goods.goodsImg" width="100%">
+                        </span>
+                        <p class="type-info-right">
+                          <span class="foodName">{{goods.goodsName}}</span>
+                          <span class="foodPrice">￥{{goods.price}}元</span>
+                        </p>
+                    </li>
+                </ul>
+              </el-tab-pane>
+              <el-tab-pane label="小食" name="third">
+                <ul class='cookList'>
+                    <li v-for="(goods,index) in typeGoods3" :key="index">
+                        <span class="foodImg">
+                          <img :src="goods.goodsImg" width="100%">
+                        </span>
+                        <p class="type-info-right">
+                          <span class="foodName">{{goods.goodsName}}</span>
+                          <span class="foodPrice">￥{{goods.price}}元</span>
+                        </p>
+                    </li>
+                </ul>
+              </el-tab-pane>
+              <el-tab-pane label="饮料" name="fourth">
+                <ul class='cookList'>
+                    <li v-for="(goods,index) in typeGoods4" :key="index">
+                        <span class="foodImg">
+                          <img :src="goods.goodsImg" width="100%">
+                        </span>
+                        <p class="type-info-right">
+                          <span class="foodName">{{goods.goodsName}}</span>
+                          <span class="foodPrice">￥{{goods.price}}元</span>
+                        </p>
+                    </li>
+                </ul>
+              </el-tab-pane>
             </el-tabs>
           </div>
         </el-col>
@@ -72,6 +105,7 @@
 </template>
 
 <script>
+  import axios from 'axios'
   // 调整高度
   function resize () {
     let orderHeight = document.body.clientHeight
@@ -105,48 +139,35 @@
           price: 8,
           count: 7
         }],
-        oftenGoods: [{
-          goodsId: 1,
-          goodsName: '香辣鸡腿堡',
-          price: 18
-        }, {
-          goodsId: 2,
-          goodsName: '田园鸡腿堡',
-          price: 15
-        }, {
-          goodsId: 3,
-          goodsName: '和风汉堡',
-          price: 15
-        }, {
-          goodsId: 4,
-          goodsName: '快乐全家桶',
-          price: 80
-        }, {
-          goodsId: 5,
-          goodsName: '脆皮炸鸡腿',
-          price: 10
-        }, {
-          goodsId: 6,
-          goodsName: '魔法鸡块',
-          price: 20
-        }, {
-          goodsId: 7,
-          goodsName: '可乐大杯',
-          price: 10
-        }, {
-          goodsId: 8,
-          goodsName: '雪顶咖啡',
-          price: 18
-        }, {
-          goodsId: 9,
-          goodsName: '大块鸡米花',
-          price: 15
-        }, {
-          goodsId: 20,
-          goodsName: '香脆鸡柳',
-          price: 17
-        }]
+        oftenGoods: [],
+        typeGoods: [],
+        typeGoods2: [],
+        typeGoods3: [],
+        typeGoods4: []
       }
+    },
+    created () {
+      // 常用商品接口
+      axios.get('https://www.easy-mock.com/mock/5a09a4297b68855a07f77288/example/oftenGoods')
+      .then(response => {
+        this.oftenGoods = response.data
+      })
+      .catch(error => {
+        console.log(error)
+        this.$message.error('找不到常用商品数据！')
+      })
+      // 分类商品接口
+      axios.get('https://www.easy-mock.com/mock/5a09a4297b68855a07f77288/example/typeGoods')
+      .then(response => {
+        this.typeGoods = response.data[0]
+        this.typeGoods2 = response.data[1]
+        this.typeGoods3 = response.data[2]
+        this.typeGoods4 = response.data[3]
+      })
+      .catch(error => {
+        console.log(error)
+        this.$message.error('找不到分类商品数据！')
+      })
     },
     mounted: function () {
       resize()
@@ -163,6 +184,9 @@
           message: '居中',
           center: true
         })
+      },
+      errorBtn () {
+        this.$message.error('找不到数据！')
       }
     }
   }
@@ -207,14 +231,15 @@
   .often-goods-list ul li:hover {
     border-color: #409eff;
   }
-
-  .often-goods-list{
+  
+  .often-goods-list {
     border-bottom: 1px solid #ededed;
   }
   
   .o-price {
     color: #58B7FF;
   }
+  
   .time {
     font-size: 13px;
     color: #999;
@@ -224,25 +249,67 @@
     margin-top: 13px;
     line-height: 12px;
   }
-
+  
   .button {
     padding: 0;
     float: right;
   }
-
+  
   .image {
     width: 100px;
     margin: 0 auto;
     display: block;
   }
-
+  
   .clearfix:before,
   .clearfix:after {
-      display: table;
-      content: "";
+    display: table;
+    content: "";
   }
   
   .clearfix:after {
-      clear: both
+    clear: both
+  }
+  
+  .cookList li {
+    list-style: none;
+    width: 23%;
+    border: 1px solid #E5E9F2;
+    height: auot;
+    overflow: hidden;
+    background-color: #fff;
+    padding: 2px;
+    float: left;
+    margin: 2px;
+    cursor: pointer;
+  }
+
+  
+  .foodImg {
+    width: 40%;
+    display: block;
+    float: left;
+  }
+  
+  .foodName {
+    font-size: 18px;
+    color: brown;
+    display: block;
+    text-align: center;
+  }
+  
+  .foodPrice {
+    font-size: 16px;
+    padding-top: 10px;
+    text-align: center;
+  }
+
+  .cookList li:hover{
+    border-color: #409eff;
+  }
+
+  .type-info-right{
+    float: left;
+    width: 60%;
   }
 </style>
